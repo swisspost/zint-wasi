@@ -129,7 +129,7 @@ pub fn action_stub_plugin(args: &[String]) -> ActionResult {
 fn binaryen_url(version: impl AsRef<str>) -> String {
     let version = version.as_ref();
     #[cfg(all(target_os = "linux", target_arch = "aarch64"))]
-    return format!("https://github.com/WebAssembly/binaryen/releases/download/version_{version}/binaryen-version_{version}-arm64-linux.tar.gz");
+    return format!("https://github.com/WebAssembly/binaryen/releases/download/version_{version}/binaryen-version_{version}-aarch64-linux.tar.gz");
     #[cfg(all(target_os = "linux", target_arch = "x86_64"))]
     return format!("https://github.com/WebAssembly/binaryen/releases/download/version_{version}/binaryen-version_{version}-x86_64-linux.tar.gz");
     #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
