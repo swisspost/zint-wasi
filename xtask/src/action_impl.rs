@@ -44,7 +44,7 @@ pub fn action_ensure_wasi_sdk(_args: &[String]) -> ActionResult {
 
     if !exists(&extract_path) {
         if !exists(&download_path) {
-            let url = wasi_url(state!(WASI_SDK_VERSION, default: "24"));
+            let url = wasi_url(state!(WASI_SDK_VERSION, default: "34"));
             action_expect!(download(url, &download_path));
         }
 
@@ -156,7 +156,7 @@ pub fn action_prepare_wasm_opt(args: &[String]) -> ActionResult {
     if !exists(wasm_opt_bin) {
         if !exists(&binaryen_tar) {
             action_expect!(download(
-                binaryen_url(state!(BINARYEN_VERSION, default: "119")),
+                binaryen_url(state!(BINARYEN_VERSION, default: "132")),
                 &binaryen_tar
             ));
         }
@@ -168,7 +168,7 @@ pub fn action_prepare_wasm_opt(args: &[String]) -> ActionResult {
                 "--strip-components=2".to_string(),
                 format!(
                     "binaryen-version_{}/bin/{WASM_OPT}",
-                    state!(BINARYEN_VERSION, default: "119")
+                    state!(BINARYEN_VERSION, default: "132")
                 )
             ]
         ));
@@ -371,9 +371,9 @@ mod tests {
     #[test]
     fn every_archive_this_platform_downloads_is_pinned() {
         let urls = [
-            wasi_url(state!(WASI_SDK_VERSION, default: "24")),
-            binaryen_url(state!(BINARYEN_VERSION, default: "119")),
-            typst_url(state!(TYPST_VERSION, default: "0.13.1")).0,
+            wasi_url(state!(WASI_SDK_VERSION, default: "34")),
+            binaryen_url(state!(BINARYEN_VERSION, default: "132")),
+            typst_url(state!(TYPST_VERSION, default: "0.15.1")).0,
         ];
 
         for url in urls {
