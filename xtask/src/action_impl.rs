@@ -328,6 +328,7 @@ pub fn action_install_typst(_args: &[String]) -> ActionResult {
 #[cfg(test)]
 mod tests {
     use super::{binaryen_url, typst_url, wasi_url};
+    use crate::state;
 
     /// Only the branch for the platform the tests run on is compiled, which is
     /// also the branch that platform's builds depend on.
@@ -361,6 +362,27 @@ mod tests {
             "{typst} should be a {extension}"
         );
         assert!(typst.contains(archive), "{typst} should download {archive}");
+    }
+
+    /// A tool can only be moved to another version together with the digest of
+    /// what that version downloads, or the build stops on the archive it has
+    /// never seen. The versions come from the same state the build reads, so
+    /// this fails on the bump rather than on the machine that runs it next.
+    #[test]
+    fn every_archive_this_platform_downloads_is_pinned() {
+        let urls = [
+            wasi_url(state!(WASI_SDK_VERSION, default: "24")),
+            binaryen_url(state!(BINARYEN_VERSION, default: "119")),
+            typst_url(state!(TYPST_VERSION, default: "0.13.1")).0,
+        ];
+
+        for url in urls {
+            let artifact = crate::tools::release_and_name(&url);
+            assert!(
+                crate::checksum::pinned(&artifact).is_some(),
+                "no digest is pinned for '{artifact}'"
+            );
+        }
     }
 
     /// A stray space in a URL fails at download time with a message about the
